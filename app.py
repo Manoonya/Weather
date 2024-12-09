@@ -1,7 +1,7 @@
 import requests
 
 API_KEY = 'KHXWLTBiA9EGX0QMGScjGMogCLUaSv6p'
-location = 'New York'
+location = 'Moscow'
 
 url=f"http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey={API_KEY}&q={location}"
 response = requests.get(url)
