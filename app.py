@@ -1,10 +1,16 @@
-from flask import Flask
+import requests
 
-app = Flask(__name__)
+API_KEY = 'KHXWLTBiA9EGX0QMGScjGMogCLUaSv6p'
+location = 'New York'
 
-@app.route('/')
-def home():
-    return "всё работает!"
+url=f"http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey={API_KEY}&q={location}"
+response = requests.get(url)
 
-if __name__ == '__main__':
-    app.run(debug=True)
+if response.status_code == 200:
+    data = response.json()
+    location_key = data[0]["Key"]
+url2 = f"http://dataservice.accuweather.com/currentconditions/v1/{location_key}?apikey={API_KEY}"
+response = requests.get(url2)
+if response.status_code == 200:
+    data = response.json()
+    print(data)
