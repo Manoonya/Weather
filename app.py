@@ -6,7 +6,7 @@ API_KEY = 'DJSN5EyQIbyAUC4brCjeyFKDZ9Qa6NvG'
 app = Flask(__name__)
 
 def get_location_key(city_name):
-    url = f"http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey={API_KEY}&q={city_name}"
+    url = f"http://dataservice.accuweather.com/locations/v1/cities/autocomplete?apikey={API_KEY}&q={city_name}&language=ru"
     response = requests.get(url)
     if response.status_code == 200:
         data = response.json()
