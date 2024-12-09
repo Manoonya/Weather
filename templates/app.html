@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Погодные условия маршрута</title>
+</head>
+<body>
+    <h1>Прогноз погоды для маршрута</h1>
+    <form method="POST" action="/">
+        <label for="start_city">Начальный город:</label>
+        <input type="text" id="start_city" name="start_city" required>
+        <br><br>
+        <label for="end_city">Конечный город:</label>
+        <input type="text" id="end_city" name="end_city" required>
+        <br><br>
+        <button type="submit">Узнать прогноз</button>
+    </form>
+
+    {% if error_message %}
+        <p style="color: red;">{{ error_message }}</p>
+    {% endif %}
+
+    {% if start_weather and end_weather %}
+        <h2>Погода в {{ start_city }}</h2>
+        <ul>
+            <li>Температура: {{ start_weather["Температура в градусах Цельсия"] }} °C</li>
+            <li>Влажность: {{ start_weather["Влажность"] }}%</li>
+            <li>Скорость ветра: {{ start_weather["Скорость ветра"] }} км/ч</li>
+            <li>Вероятность дождя: {{ start_weather["Вероятность дождя"] }}%</li>
+        </ul>
+        <p>{{ start_weather_status }}</p>
+
+        <h2>Погода в {{ end_city }}</h2>
+        <ul>
+            <li>Температура: {{ end_weather["Температура в градусах Цельсия"] }} °C</li>
+            <li>Влажность: {{ end_weather["Влажность"] }}%</li>
+            <li>Скорость ветра: {{ end_weather["Скорость ветра"] }} км/ч</li>
+            <li>Вероятность дождя: {{ end_weather["Вероятность дождя"] }}%</li>
+        </ul>
+        <p>{{ end_weather_status }}</p>
+    {% endif %}
+</body>
+</html>
