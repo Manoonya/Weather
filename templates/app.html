@@ -3,42 +3,178 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Погодные условия маршрута</title>
+    <title>Прогноз погоды</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f8ff;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 90%;
+            background: #ffffff;
+            padding: 20px 30px;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        h1 {
+            color: #0077c2;
+            font-size: 2.8em;
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #0077c2;
+            margin-bottom: 5px;
+            text-align: left;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus {
+            border-color: #0077c2;
+            outline: none;
+        }
+
+        button {
+            padding: 15px;
+            font-size: 18px;
+            color: #fff;
+            background-color: #0077c2;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        button:hover {
+            background-color: #005da1;
+            transform: translateY(-3px);
+        }
+
+        .weather-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 20px;
+        }
+
+        .card {
+            background: #f9f9f9;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            padding: 20px;
+            width: 320px;
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .card h2 {
+            font-size: 2em;
+            color: #0077c2;
+            margin-bottom: 15px;
+        }
+
+        .card ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .card li {
+            margin: 10px 0;
+            font-size: 1.3em;
+            color: #555;
+        }
+
+        .card p {
+            margin-top: 20px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .error-message {
+            color: #555;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <h1>Прогноз погоды для маршрута</h1>
-    <form method="POST" action="/">
-        <label for="start_city">Начальный город:</label>
-        <input type="text" id="start_city" name="start_city" required>
-        <br><br>
-        <label for="end_city">Конечный город:</label>
-        <input type="text" id="end_city" name="end_city" required>
-        <br><br>
-        <button type="submit">Узнать прогноз</button>
-    </form>
+    <div class="container">
+        <h1>Прогноз погоды</h1>
+        <form method="POST" action="/">
+            <label for="start_city">Начальный город:</label>
+            <input type="text" id="start_city" name="start_city" placeholder="Введите город на русском" required>
 
-    {% if error_message %}
-        <p style="color: red;">{{ error_message }}</p>
-    {% endif %}
+            <label for="end_city">Конечный город:</label>
+            <input type="text" id="end_city" name="end_city" placeholder="Введите город на русском" required>
 
-    {% if start_weather and end_weather %}
-        <h2>Погода в {{ start_city }}</h2>
-        <ul>
-            <li>Температура: {{ start_weather["Температура в градусах Цельсия"] }} °C</li>
-            <li>Влажность: {{ start_weather["Влажность"] }}%</li>
-            <li>Скорость ветра: {{ start_weather["Скорость ветра"] }} км/ч</li>
-            <li>Вероятность дождя: {{ start_weather["Вероятность дождя"] }}%</li>
-        </ul>
-        <p>{{ start_weather_status }}</p>
+            <button type="submit">Узнать прогноз</button>
+        </form>
 
-        <h2>Погода в {{ end_city }}</h2>
-        <ul>
-            <li>Температура: {{ end_weather["Температура в градусах Цельсия"] }} °C</li>
-            <li>Влажность: {{ end_weather["Влажность"] }}%</li>
-            <li>Скорость ветра: {{ end_weather["Скорость ветра"] }} км/ч</li>
-            <li>Вероятность дождя: {{ end_weather["Вероятность дождя"] }}%</li>
-        </ul>
-        <p>{{ end_weather_status }}</p>
-    {% endif %}
+        {% if error_message %}
+            <p class="error-message">{{ error_message }}</p>
+        {% endif %}
+
+        {% if start_weather and end_weather %}
+            <div class="weather-cards">
+                <div class="card">
+                    <h2>{{ start_city }}</h2>
+                    <ul>
+                        <li>Температура: {{ start_weather["Температура в градусах Цельсия"] }} °C</li>
+                        <li>Влажность: {{ start_weather["Влажность"] }}%</li>
+                        <li>Скорость ветра: {{ start_weather["Скорость ветра"] }} км/ч</li>
+                        <li>Вероятность дождя: {{ start_weather["Вероятность дождя"] }}%</li>
+                    </ul>
+                    <p>{{ start_weather_status }}</p>
+                </div>
+
+                <div class="card">
+                    <h2>{{ end_city }}</h2>
+                    <ul>
+                        <li>Температура: {{ end_weather["Температура в градусах Цельсия"] }} °C</li>
+                        <li>Влажность: {{ end_weather["Влажность"] }}%</li>
+                        <li>Скорость ветра: {{ end_weather["Скорость ветра"] }} км/ч</li>
+                        <li>Вероятность дождя: {{ end_weather["Вероятность дождя"] }}%</li>
+                    </ul>
+                    <p>{{ end_weather_status }}</p>
+                </div>
+            </div>
+        {% endif %}
+    </div>
 </body>
 </html>
+
