@@ -1,10 +1,9 @@
 from flask import Flask, render_template, request
 import requests
 
-API_KEY = 'DJSN5EyQIbyAUC4brCjeyFKDZ9Qa6NvG'
+API_KEY = 'AAIAGhn3h1Np7vjSA7BS8cIkpUICnFm8'
 
 app = Flask(__name__)
-
 
 def get_location_key(city_name):
     try:
@@ -17,8 +16,7 @@ def get_location_key(city_name):
         else:
             return None
     except requests.exceptions.RequestException:
-        return None
-
+        return "Ошибка подключения к серверу. Проверьте сеть."
 
 def get_weather_details(location_key):
     try:
@@ -36,8 +34,7 @@ def get_weather_details(location_key):
         else:
             return None
     except requests.exceptions.RequestException:
-        return None
-
+        return "Ошибка подключения к серверу. Проверьте сеть."
 
 def check_bad_weather(temperature, wind_speed, rain_probability):
     if temperature < 0:
@@ -49,7 +46,6 @@ def check_bad_weather(temperature, wind_speed, rain_probability):
     if rain_probability > 70:
         return "Плохие погодные условия: высокая вероятность осадков."
     return "Хорошие погодные условия."
-
 
 @app.route("/", methods=["GET", "POST"])
 def index():
@@ -63,20 +59,26 @@ def index():
         start_location_key = get_location_key(start_city)
         end_location_key = get_location_key(end_city)
 
-        if not start_location_key:
+        if start_location_key == "Ошибка подключения к серверу. Проверьте сеть." or end_location_key == "Ошибка подключения к серверу. Проверьте сеть.":
+            return render_template("app.html", error_message="Ошибка подключения к серверу. Проверьте сеть.")
+
+        if start_location_key is None:
             return render_template("app.html",
                                    error_message=f"Город '{start_city}' не найден. Введите название города корректно.")
-        if not end_location_key:
+        if end_location_key is None:
             return render_template("app.html",
                                    error_message=f"Город '{end_city}' не найден. Введите название города корректно.")
 
         start_weather = get_weather_details(start_location_key)
         end_weather = get_weather_details(end_location_key)
 
-        if not start_weather:
+        if start_weather == "Ошибка подключения к серверу. Проверьте сеть." or end_weather == "Ошибка подключения к серверу. Проверьте сеть.":
+            return render_template("app.html", error_message="Ошибка подключения к серверу. Проверьте сеть.")
+
+        if start_weather is None:
             return render_template("app.html",
                                    error_message=f"Не удалось получить данные о погоде для города '{start_city}'.")
-        if not end_weather:
+        if end_weather is None:
             return render_template("app.html",
                                    error_message=f"Не удалось получить данные о погоде для города '{end_city}'.")
 
@@ -102,7 +104,5 @@ def index():
 
     return render_template("app.html")
 
-
 if __name__ == "__main__":
     app.run(debug=True)
-
