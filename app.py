@@ -82,7 +82,7 @@ def index():
             return render_template("app.html",
                                    error_message=f"Не удалось получить данные о погоде для города '{end_city}'.")
 
-        start_weather_status = check_bad_weather(
+        start_weather_status  = check_bad_weather(
             start_weather["Температура в градусах Цельсия"],
             start_weather["Скорость ветра"],
             start_weather["Вероятность дождя"]
