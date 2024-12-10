@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request
 import requests
 
-API_KEY = 'AAIAGhn3h1Np7vjSA7BS8cIkpUICnFm8'
+API_KEY = 'UR7p8AAOwZnG8uokAjGSfJGtOpDrmPqE'
 
 app = Flask(__name__)
 
